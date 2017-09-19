@@ -30,7 +30,7 @@ class CommodityStore {
   subscribeToCommodity() {
     let context = realm.current();
     context.objects('Commodity').addListener((commodities, changes) => {
-      console.log('commodities addListener',commodities)
+      console.log('commodities addListener', commodities)
       let data = []
       for (var i = 0; i < commodities.length; i++) {
 
@@ -42,7 +42,8 @@ class CommodityStore {
           barcode: commodity.barcode,
         }
         data.push(item);
-      };
+      }
+      ;
 
       this.commodities = data;
 
@@ -60,119 +61,102 @@ class CommodityStore {
     })
   }
 
-  refreshStore(){
-    // this.getAllCommodities()
+  refreshStore() {
+    this.getAllCommodities()
   }
 
-  async initialise() {
-    this.subscribeToCommodity()
+  initialise() {
+    // this.subscribeToCommodity()
     let context = realm.current();
-    try {
-      let commodities = context.objects('Commodity');
-      if (commodities.length > 0) {
-        // this.refreshStore()
-        this.getAllCommodities()
-        return;
-      }
-
-      for (var i = 0; i < defaultCommodities.length; i++) {
-        var commodity = defaultCommodities[i];
-
-        context.write(() => {
-          context.create('Commodity', {
-            name: commodity.name,
-            desc: commodity.desc,
-            price: commodity.price,
-            barcode: commodity.barcode,
-          });
-        });
-      }
-    } finally {
-      context.close();
+    let commodities = context.objects('Commodity');
+    if (commodities.length > 0) {
+      this.refreshStore()
+      // this.getAllCommodities()
+      return;
     }
+
+    for (var i = 0; i < defaultCommodities.length; i++) {
+      var commodity = defaultCommodities[i];
+
+      context.write(() => {
+        context.create('Commodity', {
+          name: commodity.name,
+          desc: commodity.desc,
+          price: commodity.price,
+          barcode: commodity.barcode,
+        });
+      });
+    }
+    context.close();
   }
 
   getAllCommodities() {
     let context = realm.current();
     var data = [];
-    try {
-      let commodities = context.objects('Commodity');
-      this.count = commodities.length;
-      for (var i = 0; i < commodities.length; i++) {
-        var commodity = commodities[i];
-        var item = {
-          name: commodity.name,
-          desc: commodity.desc,
-          price: commodity.price,
-          barcode: commodity.barcode,
-        }
-        data.push(item);
+    let commodities = context.objects('Commodity');
+    this.count = commodities.length;
+    for (var i = 0; i < commodities.length; i++) {
+      var commodity = commodities[i];
+      var item = {
+        name: commodity.name,
+        desc: commodity.desc,
+        price: commodity.price,
+        barcode: commodity.barcode,
       }
-    } finally {
-
-      context.close();
+      data.push(item);
     }
+
+    context.close();
     this.commodities = data;
   }
 
   deleteCommodity(barcode) {
     let context = realm.current();
-    try {
-      let commodity = context
-        .objects('Commodity')
-        .filtered(`barcode = "${barcode}"`);
-      ;
+    let commodity = context
+      .objects('Commodity')
+      .filtered(`barcode = "${barcode}"`);
 
-      context.write(() => {
-        context.delete(commodity);
-      });
-      this.refreshStore()
+    context.write(() => {
+      context.delete(commodity);
+    });
+    this.refreshStore()
 
-    } finally {
-      context.close();
-    }
+    context.close();
   }
 
-  async addCommodity(name, desc, price, barcode) {
+  addCommodity(name, desc, price, barcode) {
     let context = realm.current();
-    try {
-      let commodity = context
-        .objects('Commodity')
-        .filtered(`barcode = "${barcode}"`);
+    let commodity = context
+      .objects('Commodity')
+      .filtered(`barcode = "${barcode}"`);
 
-      if (commodity.length > 0) {
-        //throw an error to alert
-        throw Error('sdfa')
-        return;
-      }
-
-      context.write(() => {
-        context.create('Commodity', {
-          name: name,
-          desc: desc,
-          price: price,
-          barcode: barcode
-        });
-      });
-      this.refreshStore()
-    } finally {
-      context.close();
-
+    if (commodity.length > 0) {
+      //throw an error to alert
+      throw Error('Commodity Already Exist')
+      return;
     }
+
+    context.write(() => {
+      context.create('Commodity', {
+        name: name,
+        desc: desc,
+        price: price,
+        barcode: barcode
+      });
+    });
+    this.refreshStore()
+    context.close();
   }
 
   clearAllData() {
     let context = realm.current();
-    try {
-      let commodities = context.objects('Commodity');
-      context.write(() => {
-        context.delete(commodities);
-      });
-      this.refreshStore()
+    let commodities = context.objects('Commodity');
+    context.write(() => {
+      context.delete(commodities);
+    });
+    this.refreshStore()
 
-    } finally {
-      context.close();
-    }
+    context.close();
   }
 
 }

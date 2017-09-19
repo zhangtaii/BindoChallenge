@@ -29,7 +29,11 @@ export default class ScannerScreen extends Component {
         text: `${e.data} (${e.type})`,
         type: e.type,
       });
-      commodityStore.addCommodity(`${e.data} (${e.type})` ,'desc',1.0,e.data)
+      try{
+        commodityStore.addCommodity(`${e.data} (${e.type})` ,'desc',1.0,e.data)
+      } catch (e) {
+        alert(e.message)
+      }
     }
     // if (e.data !== this.state.barcode || e.type !== this.state.type) Vibration.vibrate();
 
