@@ -2,6 +2,7 @@ import {observable, computed} from 'mobx'
 import {ListView} from 'react-native'
 import api from './api'
 import realm from '../realm'
+import CommodityItem from '../models/CommodityItem'
 
 const defaultCommodities = [
   {name: 'Canberra', desc: '2600', price: 12.1, barcode: '1'},
@@ -103,7 +104,8 @@ class CommodityStore {
         price: commodity.price,
         barcode: commodity.barcode,
       }
-      data.push(item);
+      // data.push(item);
+      data.push(new CommodityItem(item));
     }
 
     context.close();

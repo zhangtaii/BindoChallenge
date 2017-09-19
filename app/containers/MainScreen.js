@@ -5,6 +5,7 @@ import { observer } from 'mobx-react/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ApplicationStyles from '../styles'
 import CommodityCountView from '../components/CommodityCountView'
+import CommodityItemView from '../components/CommodityItemView'
 import configureRealm from '../realm/configure';
 import commodityStore from '../stores/commodityStore'
 
@@ -29,7 +30,7 @@ export default class MainScreen extends Component {
       <View style={[styles.container, ApplicationStyles.container]}>
         <ListView
           dataSource={commodityStore.dataSource}
-          renderRow={row => <Text>{row.name}</Text>}
+          renderRow={rowData => <CommodityItemView rowData={rowData}/>}
           enableEmptySections={true}
         />
         <CommodityCountView commodityStore={commodityStore}/>
