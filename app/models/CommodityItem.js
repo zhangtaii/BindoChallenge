@@ -16,8 +16,8 @@ export default class CommodityItem {
   desc;
   @observable
   price;
-  // @observable
-  // barcode;
+  @observable
+  barcode;
   @observable
   finished = false;
 
@@ -27,11 +27,13 @@ export default class CommodityItem {
     this.name = props.name
     this.desc = props.desc
     this.price = props.price
+    this.barcode = props.barcode
   }
 
   @action
   toggleFinish() {
     this.finished = !this.finished;
+
   }
 
 }
