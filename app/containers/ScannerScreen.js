@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   Vibration,
-  View
+  View,
+  Button
 } from 'react-native';
 import BarcodeScanner from 'react-native-barcodescanner';
 import commodityStore from '../stores/commodityStore'
@@ -22,6 +23,13 @@ export default class ScannerScreen extends Component {
     };
   }
 
+  static navigationOptions = ({ navigation, screenProps }) => ({
+    title: 'Scanning...',
+    headerLeft: <Button title="Close" onPress={()=> navigation.goBack(null)} />,
+    headerRight: <Button title="Done" onPress={() => navigation.goBack(null)} />,
+
+  });
+
   barcodeReceived(e) {
     if (e.data !== this.state.barcode){
       this.setState({
@@ -30,9 +38,10 @@ export default class ScannerScreen extends Component {
         type: e.type,
       });
       try{
-        commodityStore.addCommodity(`${e.data} (${e.type})` ,'desc',1.0,e.data)
-      } catch (e) {
-        alert(e.message)
+        commodityStore.addCommodity(`${e.data} Name` ,'desc',1.0,e.data)
+        alert(`${e.data} Added`)
+      } catch (err) {
+        alert(err.message)
       }
     }
     // if (e.data !== this.state.barcode || e.type !== this.state.type) Vibration.vibrate();
@@ -53,9 +62,6 @@ export default class ScannerScreen extends Component {
           torchMode={this.state.torchMode}
           cameraType={this.state.cameraType}
         />
-        <View style={styles.statusBar}>
-          <Text style={styles.statusBarText}>{this.state.text}</Text>
-        </View>
       </View>
     );
   }
