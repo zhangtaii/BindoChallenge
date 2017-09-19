@@ -12,7 +12,7 @@ export default class CommodityItemView extends Component {
   render() {
     return <TouchableOpacity style={{height:50,flexDirection:'row'}}
                              onPress={()=>this.props.rowData.toggleFinish()}>
-      <Text> {this.props.rowData.name} {this.props.rowData.finished && '√'}</Text>
+      <Text style={this.props.rowData.finished && {textDecorationLine:'line-through'}}> {this.props.rowData.name}</Text>
     </TouchableOpacity>
   }
 }

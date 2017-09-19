@@ -3,10 +3,11 @@ import {observable, computed, action} from 'mobx'
 
 export default class CommodityItem {
   constructor(props){
-    this.name = props.name
-    this.desc = props.desc
-    this.price = props.price
-    // this.barcode = props.barcode
+    this.setProps(props)
+    // this.name = props.name
+    // this.desc = props.desc
+    // this.price = props.price
+    // // this.barcode = props.barcode
   }
 
   @observable
@@ -20,8 +21,17 @@ export default class CommodityItem {
   @observable
   finished = false;
 
+
+  @action
+  setProps(props) {
+    this.name = props.name
+    this.desc = props.desc
+    this.price = props.price
+  }
+
   @action
   toggleFinish() {
     this.finished = !this.finished;
   }
+
 }
